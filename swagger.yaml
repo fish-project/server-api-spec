@@ -1,0 +1,199 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  description: Mô tả tất cả API từ Fish Server
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Máy chủ phát triển
+tags:
+  - name: invitation api
+    description: api để gửi thư mời user vô 1 thuyền
+  - name: ship api
+    description: api liên quan tới thuyền
+  - name: user api 
+    description: api cơ bản cho người dùng
+  - name: admin api 
+    description: api cho quản trị viên
+
+components:
+  schemas:
+    CommonResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Thời gian phản hồi
+        status:
+          type: string
+          description: Trạng thái của phản hồi (success, error, ...)
+        code:
+          type: integer
+          description: Mã phản hồi HTTP
+        message:
+          type: object
+          description: Phản hồi của ứng dụng
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /admin/assign:
+    post:
+      summary: gán quyền (role) cho người dùng
+      description: API này cho phép admin gán quyền hoặc nhiệm vụ cho một người dùng cụ thể.
+      tags:
+        - admin api
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: role
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+                    
+
+
+  /api/info:
+    get:
+      summary: lấy thông tin người dùng
+      description: API này cho phép lấy thông tin của user
+      tags:
+        - user api 
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /api/changeDisplayName:
+    patch:
+      summary: đổi tên hiển thị
+      description: :v
+      tags:
+        - user api
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"    
+
+  /ship:
+    post:
+      summary: tạo thuyền mới
+      tags:
+        - ship api
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                crewSize:
+                  type: integer
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+    get:
+      summary: lấy thông tin tất cả thuyền mà user sỡ hữu
+      tags:
+        - ship api
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /ship/addMember:
+    post:
+      summary: Gửi thư mời thành viên khác lên thuyên
+      description: Gửi một email tồn tại trong 12 tiếng, email nãy sẽ chứa url đến <domain>/invitation/join/....
+      tags:
+        - ship api
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                shipID:
+                  type: string
+                userEmail:
+                  type: string
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /invitation/join/{invitation_id}:
+    post:
+      summary: chấp nhận lời mời
+      description: xóa dữ liệu sau khi chấp nhận (hoặc lỗi)
+      tags:
+        - invitation api
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+
+
+  
