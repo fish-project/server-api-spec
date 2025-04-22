@@ -42,7 +42,7 @@ components:
 
 paths:
   /admin/assign:
-    post:
+    patch:
       summary: gán quyền (role) cho người dùng
       description: API này cho phép admin gán quyền hoặc nhiệm vụ cho một người dùng cụ thể.
       tags:
@@ -67,8 +67,46 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CommonResponse"
-                    
 
+  /admin/getUser:
+    get: 
+      summary: lấy thông tin tất cả user
+      description: API này cho phép lấy thông tin của tất cả người dùng
+      tags:
+        - admin api
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            default: 0
+      responses:
+        default:                 
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /admin/deleteUser/{email}:
+    delete:
+      summary: xóa thông tin của user ra khỏi database
+      description: API này cho phép xóa thông tin của user ra khỏi database, đồng thời xóa luôn thuyền mà user đó sở hữu
+      tags:
+        - admin api
+      security:
+        - BearerAuth: []
+      # parameters:
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
 
   /api/info:
     get:
