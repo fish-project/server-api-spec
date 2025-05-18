@@ -212,6 +212,70 @@ paths:
               schema:
                 $ref: "#/components/schemas/CommonResponse"
 
+  /ship/leave/{ship_id}:
+    get:
+      summary: Rời khỏi thuyền
+      description: API để out khỏi thuyền. Đối với owner, báo lỗi không thể out. Nếu thuyền không tồn tại, báo lỗi 404.
+      tags:
+        - ship api
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /ship/promote/{user_id}:
+    get:
+      summary: Nhường quyền owner cho 1 thuyền viên
+      description: Nhường quyền owner cho 1 thuyền viên owner -> member & member -> owner. Báo lỗi 404 nếu user_id không tồn tại hoặc không có trên thuyền.
+      tags:
+        - ship api
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /ship/delete/{ship_id}:
+    delete:
+      summary: Xóa 1 thuyền trong danh sách thuyền đã tạo của user
+      description: Xóa 1 thuyền trong danh sách thuyền đã tạo của user, nếu {ship_id} không tồn tại báo lỗi 404
+      tags:
+        - ship api
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
+  /ship/delete/{ship_id}/{user_id}:
+    delete:
+      summary: Xóa 1 thành viên ra khỏi thuyền
+      description: Xóa 1 thành viên ra khỏi thuyền, nếu {ship_id} / {user_id} không tồn tại báo lỗi 404
+      tags:
+        - ship api
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Phản hồi chung cho mọi mã trạng thái
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommonResponse"
+
   /invitation/join/{invitation_id}:
     post:
       summary: chấp nhận lời mời
